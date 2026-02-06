@@ -1,6 +1,8 @@
-const DEFAULT_BASE = 'http://localhost:8080'
+const DEFAULT_BASE = 'https://bitdding-backend.onrender.com'
 
-export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? DEFAULT_BASE
+export const API_BASE_URL =
+  (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
+  DEFAULT_BASE
 
 export function uploadsUrl(filename: string | null | undefined): string | null {
   if (!filename) return null
@@ -40,7 +42,10 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
   if (!res.ok) {
     const details = await parseErrorBody(res)
     const message =
-      (typeof details === 'object' && details && 'message' in (details as any) && (details as any).message) ||
+      (typeof details === 'object' &&
+        details &&
+        'message' in (details as any) &&
+        (details as any).message) ||
       res.statusText ||
       'Request failed'
     throw new ApiError(String(message), res.status, details)
@@ -58,7 +63,6 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
     return JSON.parse(text) as T
   }
 
-  // Some endpoints may return plain text on success.
   try {
     return JSON.parse(text) as T
   } catch {
